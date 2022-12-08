@@ -32,7 +32,7 @@ async def resolve(domain: str) -> str:
 
 @routers.get("/")
 async def index(request: web.Request) -> web.Response:
-    domain = request.query.get("domain")
+    domain = request.host
     return web.Response(content_type="text/plain", text=await resolve(domain))
 
 
