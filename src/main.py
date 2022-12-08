@@ -8,9 +8,10 @@ routers = web.RouteTableDef()
 async def index(request: web.Request) -> web.Response:
     # get domain name from request
     result = ""
+
     for record in await dns_resolve(request.host, "TXT"):
-        result += record.to_text() + "\n"
-    return web.Response(text=result)
+        result += record.strings[0].decode() + "\n"
+    return web.Response(content_type="text/plain", text=result)
 
 
 app = web.Application()
