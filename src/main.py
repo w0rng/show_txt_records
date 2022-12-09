@@ -1,3 +1,5 @@
+from typing import Tuple, Union
+
 from aiohttp import web
 from asyncache import cached
 from cachetools import TTLCache
@@ -5,6 +7,7 @@ from config import config
 from dns.asyncresolver import resolve as dns_resolve
 from dns.resolver import NXDOMAIN, NoAnswer, NoNameservers, Timeout
 from logger import get_logger
+from redis_cache import cache_redis
 
 routers = web.RouteTableDef()
 logger = get_logger(__name__)
@@ -18,7 +21,8 @@ async def get_records(domain: str) -> list[str]:
     return result
 
 
-async def resolve(domain: str, /, extra: dict) -> str:
+@cache_redis(ttl=config.cache_ttl)
+async def resolve(domain: str, /, extra: dict) -> Tuple[str, int]:
     answers = []
     logger.info("Resolving %s", domain)
 
@@ -27,24 +31,22 @@ async def resolve(domain: str, /, extra: dict) -> str:
             logger.debug("Found answer: %s", record, extra=extra)
             answers.append(record)
     except NoAnswer:
-        result = "No TXT record found"
         logger.info("No answer found for %s", domain, extra=extra)
+        return "No TXT record found", 200
     except NXDOMAIN:
-        result = "No such domain"
         logger.info("No such domain: %s", domain, extra=extra)
+        return "No such domain", 404
     except NoNameservers:
-        result = "No nameservers found"
         logger.info("No nameservers found for %s", domain, extra=extra)
+        return "No nameservers found", 200
     except Timeout:
-        result = "Timeout"
         logger.warning("Timeout while resolving %s", domain, extra=extra)
+        return "Timeout", 500
     except Exception as e:
-        result = "Unknown error"
         logger.error("Unknown error while resolving %s: %s", domain, e, extra=extra)
+        return "Unknown error", 500
     else:
-        result = "\n\n".join(sorted(answers))
-
-    return result
+        return "\n\n".join(sorted(answers)), 200
 
 
 @routers.get("/")
@@ -60,7 +62,8 @@ async def index(request: web.Request) -> web.Response:
     if not domain:
         logger.warning("No domain provided", extra=extra)
         return web.Response(status=400, text="Bad request", content_type="text/plain")
-    return web.Response(content_type="text/plain", text=await resolve(domain, extra=extra))
+    result, status_code = await resolve(domain, extra=extra)
+    return web.Response(content_type="text/plain", text=result, status=status_code)
 
 
 app = web.Application(logger=logger)

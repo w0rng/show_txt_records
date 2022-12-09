@@ -305,6 +305,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "redis"
+version = "4.4.0"
+requires_python = ">=3.7"
+summary = "Python client for Redis database and key-value store"
+dependencies = [
+    "async-timeout>=4.0.2",
+]
+
+[[package]]
 name = "requests"
 version = "2.28.1"
 requires_python = ">=3.7, <4"
@@ -383,7 +392,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:69e5392967f18e3f04f218c7b38060073c6674069592e7fb57dfa2c1e7af57e6"
+content_hash = "sha256:43125366d19cf2a4383e1bd1dfb749948bb837294fbd9baadff42e31924b6687"
 
 [metadata.files]
 "aiohttp 3.8.3" = [
@@ -1278,6 +1287,10 @@ content_hash = "sha256:69e5392967f18e3f04f218c7b38060073c6674069592e7fb57dfa2c1e
     {url = "https://files.pythonhosted.org/packages/ec/e2/5fe1af54543b82b1a011d99a390e8a835bd112120657ca4d7a3d8966370e/pyzmq-24.0.1-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:48f721f070726cd2a6e44f3c33f8ee4b24188e4b816e6dd8ba542c8c3bb5b246"},
     {url = "https://files.pythonhosted.org/packages/fb/2b/005c963bb602ac65110a52647f73b0050696c1967b630f69feece3906bc7/pyzmq-24.0.1-cp38-cp38-macosx_10_15_universal2.whl", hash = "sha256:acbd0a6d61cc954b9f535daaa9ec26b0a60a0d4353c5f7c1438ebc88a359a47e"},
     {url = "https://files.pythonhosted.org/packages/fe/ff/dbb52575d386cecafbaf029a994ce75dac1f5332acf9319f45b8f7692727/pyzmq-24.0.1-cp37-cp37m-win_amd64.whl", hash = "sha256:54d8b9c5e288362ec8595c1d98666d36f2070fd0c2f76e2b3c60fbad9bd76227"},
+]
+"redis 4.4.0" = [
+    {url = "https://files.pythonhosted.org/packages/7a/05/671367bb466b3301bc4543fdad6ac107214ca327c8d97165b30246d87e88/redis-4.4.0.tar.gz", hash = "sha256:7b8c87d19c45d3f1271b124858d2a5c13160c4e74d4835e28273400fa34d5228"},
+    {url = "https://files.pythonhosted.org/packages/ca/a5/0b77e6af5ba01270c2b269ea5b05cd7a1b248c713ab02e3e11d3eb4e39d7/redis-4.4.0-py3-none-any.whl", hash = "sha256:cae3ee5d1f57d8caf534cd8764edf3163c77e073bdd74b6f54a87ffafdc5e7d9"},
 ]
 "requests 2.28.1" = [
     {url = "https://files.pythonhosted.org/packages/a5/61/a867851fd5ab77277495a8709ddda0861b28163c4613b011bc00228cc724/requests-2.28.1.tar.gz", hash = "sha256:7c5599b102feddaa661c826c56ab4fee28bfd17f5abca1ebbe3e7f19d7c97983"},

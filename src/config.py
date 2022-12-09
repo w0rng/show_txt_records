@@ -23,7 +23,27 @@ class Config:
     debug: bool = env.bool("DEBUG", False)
 
 
+@dataclass(frozen=True)
+class RedisConfig:
+    """Configuration for Redis."""
+
+    use = env.bool("REDIS_USE", False)
+    host: str = env.str("REDIS_HOST", "localhost")
+    pool_size: int = env.int("REDIS_POOL_SIZE", 10)
+    port: int = env.int("REDIS_PORT", 6379)
+    db: int = env.int("REDIS_DB", 0)
+    password: str = env.str("REDIS_PASSWORD", None)
+    url: str = env.str("REDIS_URL", None)
+
+    def get_url(self) -> str:
+        """Get Redis URL."""
+        if self.url:
+            return self.url
+        return f"redis://{self.host}:{self.port}/{self.db}"
+
+
 config = Config()
 gunicorn_config = GunicornConfig()
+redis_config = RedisConfig()
 
-__all__ = ["config", "gunicorn_config"]
+__all__ = ["config", "gunicorn_config", "redis_config"]
