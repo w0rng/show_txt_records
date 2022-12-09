@@ -1,7 +1,4 @@
-import multiprocessing
-from os import getenv
+from config import gunicorn_config
 
-port = getenv("PORT", "80")
-bind = f"0.0.0.0:{port}"
-max_workers = multiprocessing.cpu_count() * 2 + 1
-workers = getenv("WORKERS", max_workers)
+bind = f"0.0.0.0:{gunicorn_config.port}"
+workers = gunicorn_config.count_workers
