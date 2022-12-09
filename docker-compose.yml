@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  show_txt_records:
+    image: show_txt_records
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - WORKERS=3
+      - REDIS_USE=True
+      - REDIS_HOST=redis
+    ports:
+      - "80:80"
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
