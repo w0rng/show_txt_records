@@ -1,5 +1,3 @@
-from typing import AsyncGenerator
-
 from aiohttp import web
 from asyncache import cached
 from cachetools import TTLCache
@@ -13,9 +11,11 @@ logger = get_logger(__name__)
 
 
 @cached(cache=TTLCache(maxsize=config.cache_max_size, ttl=config.cache_ttl))
-async def get_records(domain: str) -> AsyncGenerator[str, None]:
+async def get_records(domain: str) -> list[str]:
+    result = []
     for record in await dns_resolve(domain, "TXT"):
-        yield record.strings[0].decode()
+        result.append(record.strings[0].decode())
+    return result
 
 
 async def resolve(domain: str, /, extra: dict) -> str:
@@ -23,7 +23,7 @@ async def resolve(domain: str, /, extra: dict) -> str:
     logger.info("Resolving %s", domain)
 
     try:
-        async for record in get_records(domain):
+        for record in await get_records(domain):
             logger.debug("Found answer: %s", record, extra=extra)
             answers.append(record)
     except NoAnswer:
